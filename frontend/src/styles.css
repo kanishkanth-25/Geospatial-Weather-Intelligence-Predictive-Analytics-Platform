@@ -1,0 +1,37 @@
+@import 'leaflet/dist/leaflet.css';
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; font-family: Inter, 'Segoe UI', Arial, sans-serif; }
+body { min-width: 320px; }
+.weather-pin-wrap{background:transparent;border:0}.weather-pin{display:block;width:18px;height:18px;border:3px solid #fff;border-radius:50% 50% 50% 0;background:#078b70;box-shadow:0 2px 8px #173b3655;transform:rotate(-45deg)}
+
+/* Keep the map panel compact and place the detailed forecast into the open left column. */
+.workspace{align-items:start}
+.map-panel{align-self:start;position:sticky;top:16px}
+.details-panel{align-self:start;min-width:0}
+.workspace>.daily-outlook{grid-column:1;align-self:start;width:100%;min-width:0;padding:23px 25px 18px;background:#fff;border:1px solid #e4ece9;border-radius:16px;box-shadow:0 8px 30px #263d4508}
+.table-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.table-heading h2{margin:0;color:#203638;font-size:21px;letter-spacing:-.4px}
+.table-heading p:not(.eyebrow){margin:6px 0 0;color:#778789;font-size:11px}
+.table-scroll{width:100%;overflow-x:auto;border:1px solid #e5eeea;border-radius:11px}
+.outlook-table{width:100%;min-width:700px;border-collapse:collapse;text-align:left;font-size:11px}
+.outlook-table thead{background:#eaf5f0;color:#527068}
+.outlook-table th{padding:12px 11px;font-size:9px;font-weight:700;letter-spacing:.35px;white-space:nowrap}
+.outlook-table tbody tr{height:54px;background:#fff;transition:background .15s ease}
+.outlook-table tbody tr.alt-row{background:#f8fbf9}
+.outlook-table tbody tr:hover{background:#eff8f3}
+.outlook-table td{padding:9px 11px;border-top:1px solid #edf2ef;color:#405558;white-space:nowrap}
+.outlook-table .date-cell{font-weight:700;color:#263c3d}
+.condition-chip{display:inline-block;padding:5px 8px;border-radius:20px;background:#fff5df;color:#a97619;font-size:9px}
+.temperature-cell{white-space:nowrap}
+.temperature-cell strong{color:#253f3c;font-size:14px}
+.temperature-cell span{margin-left:7px;color:#889596;font-size:11px}
+.table-value{display:inline-block;padding:5px 7px;border-radius:7px;font-weight:700;font-variant-numeric:tabular-nums}
+.table-value small{font-size:8px;font-weight:500}
+.humidity-value{background:#eef3ff;color:#4f6eb4}
+.wind-value{background:#edf8f7;color:#258177}
+.rain-value{background:#eef7ff;color:#3978a5}
+.precip-value{background:#f1efff;color:#6d61aa}
+.outlook-note{margin:11px 2px 0;color:#899697;font-size:9px;line-height:1.55}
+@media(max-width:900px){.map-panel{position:static}.workspace>.daily-outlook{grid-column:1}}
+@media(max-width:540px){.workspace>.daily-outlook{padding:18px 14px}.table-heading h2{font-size:18px}}

@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+backend/db.sqlite3
+backend/ml_pipeline/data/
+backend/ml_pipeline/artifacts/

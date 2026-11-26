@@ -1,0 +1,46 @@
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Skywise home"><span class="brand-mark">☼</span><span>skywise<span class="brand-dot">.</span></span></a>
+    <div class="topbar-note"><span class="live-dot"></span> Live weather · Global coverage</div>
+    <div class="topbar-unit">°C <span>⌄</span></div>
+  </header>
+  <main class="workspace">
+    <section class="map-panel">
+      <div class="map-heading"><div><p class="eyebrow">GEOSPATIAL WEATHER</p><h1>Explore the atmosphere</h1><p class="subheading">Select any point on the map to see current conditions and a 24-hour forecast.</p></div><span class="map-hint">⌖ &nbsp;Click map to explore</span></div>
+      <div id="weather-map" role="application" aria-label="Interactive world map. Click a location to get its weather forecast."></div>
+      <div class="map-footer"><span><i class="legend-dot"></i> Selected location</span><span>Weather data · Open-Meteo</span></div>
+    </section>
+    <aside class="details-panel">
+      @if (!forecast() && !loading() && !error()) {
+        <div class="empty-state"><div class="empty-icon">⌖</div><p class="eyebrow">YOUR WEATHER, ANYWHERE</p><h2>Choose a location</h2><p>Click anywhere on the map to see local weather conditions and the LSTM forecast.</p><div class="empty-coordinates">Latitude · Longitude</div></div>
+      }
+      @if (loading()) {
+        <div class="loading-state"><span class="spinner"></span><p class="eyebrow">FETCHING FORECAST</p><h2>Reading the atmosphere…</h2><p>Getting current conditions and preparing the next 24 hours.</p></div>
+      }
+      @if (error()) {
+        <div class="error-state"><span class="error-icon">!</span><p class="eyebrow">FORECAST UNAVAILABLE</p><h2>We couldn't load this location</h2><p>{{ error() }}</p><p class="coordinates">{{ selectedPoint()?.lat | number:'1.4-4' }}°, {{ selectedPoint()?.lon | number:'1.4-4' }}°</p></div>
+      }
+      @if (forecast(); as result) {
+        <div class="weather-detail">
+          <div class="location-meta"><div><p class="eyebrow">SELECTED COORDINATES</p><p class="coordinates">{{ formatLatitude(result.lat) }} &nbsp; {{ formatLongitude(result.lon) }}</p></div><span class="source-tag">OPEN-METEO</span></div>
+          <div class="current-weather"><div><p class="eyebrow">CURRENT CONDITIONS</p><div class="current-temp">{{ result.current.temperature | number:'1.0-1' }}<span>°</span></div><p class="condition">{{ result.current.weather_description }}</p></div><div class="weather-symbol">☀</div><p class="updated">Updated {{ localTimeLabel }}</p></div>
+          <div class="metrics-grid">
+            <div class="metric"><span class="metric-icon">◌</span><span class="metric-label">Humidity</span><strong>{{ result.current.relative_humidity }}<small>%</small></strong></div>
+            <div class="metric"><span class="metric-icon">⌁</span><span class="metric-label">Wind</span><strong>{{ result.current.wind_speed | number:'1.0-1' }}<small> km/h</small></strong></div>
+            <div class="metric"><span class="metric-icon">▧</span><span class="metric-label">Precipitation</span><strong>{{ result.current.precipitation | number:'1.0-1' }}<small> mm</small></strong></div>
+            <div class="metric"><span class="metric-icon">☂</span><span class="metric-label">Rain</span><strong>{{ result.current.rain | number:'1.0-1' }}<small> mm</small></strong></div>
+          </div>
+          <section class="forecast-section"><div class="section-heading"><div><p class="eyebrow">24-HOUR TEMPERATURE</p><h2>LSTM vs provider</h2></div><span class="model-badge">● &nbsp;{{ result.model_status === 'lstm_inference' ? 'LSTM active' : result.model_status }}</span></div><div class="hourly-list">@for (hour of result.predicted_next_24h; track hour.time; let i = $index) {@if (i % 3 === 0) {<div class="hour-item"><span class="hour-label">{{ formatHour(hour.time) }}</span><span class="hour-weather">{{ i < 8 ? '☀' : '◐' }}</span><strong>{{ hour.temperature | number:'1.0-1' }}°</strong><small class="provider-temp">OM {{ result.provider_forecast_next_24h[i].temperature | number:'1.0-1' }}°</small></div>}}</div><div class="model-footnote">Top: LSTM model · OM: Open-Meteo forecast · {{ result.model_version }}</div></section>
+        </div>
+      }
+    </aside>
+    @if (forecast(); as result) {
+      <section class="daily-outlook">
+        <div class="table-heading"><div><p class="eyebrow">MULTI-VARIABLE WEATHER</p><h2>7-day forecast</h2><p>Daily outlook for {{ formatLatitude(result.lat) }}, {{ formatLongitude(result.lon) }}</p></div><span class="source-tag">OPEN-METEO</span></div>
+        <div class="table-scroll"><table class="outlook-table"><thead><tr><th>Date</th><th>Conditions</th><th>High / low</th><th>Humidity</th><th>Wind max</th><th>Rain</th><th>Precipitation</th></tr></thead><tbody>@for (day of result.provider_outlook_next_7_days; track day.date; let i = $index) {<tr [class.alt-row]="i % 2 === 1"><td class="date-cell">{{ formatDate(day.date) }}</td><td><span class="condition-chip">{{ day.weather_description }}</span></td><td class="temperature-cell"><strong>{{ day.temperature_max | number:'1.0-1' }}°</strong><span>{{ day.temperature_min | number:'1.0-1' }}°</span></td><td><span class="table-value humidity-value">{{ day.humidity_mean }}<small>%</small></span></td><td><span class="table-value wind-value">{{ day.wind_speed_max | number:'1.0-1' }}<small> km/h</small></span></td><td><span class="table-value rain-value">{{ day.rain_sum | number:'1.0-1' }}<small> mm</small></span></td><td><span class="table-value precip-value">{{ day.precipitation_sum | number:'1.0-1' }}<small> mm</small></span></td></tr>}</tbody></table></div>
+        <p class="outlook-note">Humidity is the hourly average. Rain and precipitation are daily totals; wind is the day's maximum. This 7-day outlook is supplied by Open-Meteo.</p>
+      </section>
+    }
+  </main>
+  <footer class="page-footer"><span>SKYWISE WEATHER INTELLIGENCE</span><span>Forecasts are estimates and may differ from observed weather.</span></footer>
+</div>
